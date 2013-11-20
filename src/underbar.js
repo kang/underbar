@@ -181,7 +181,7 @@ var _ = { };
       totalCount = initialValue;
     }
     _.each(collection, function(val){
-      totalCount = iterator(val, totalCount);
+      totalCount = iterator(totalCount, val);
     });
     return totalCount;
   };
@@ -193,7 +193,7 @@ var _ = { };
     return _.reduce(collection, function(wasFound, item) {
       if(wasFound) {
         return true;
-      } 
+      }
       return item === target;
     }, false);
   };
@@ -204,13 +204,13 @@ var _ = { };
     // TIP: Try re-using reduce() here.
     var falseTimes = 0;
     if(arguments.length === 1){
-      _.reduce(collection, function(value){
+      _.reduce(collection, function(total, value){
         if(value === false || value === null || value === 0 || value === undefined){
           falseTimes += 1;
         }
       });
     } else {
-      _.reduce(collection, function(value){
+      _.reduce(collection, function(total, value){
         if(iterator(value)===false || iterator(value) === null || iterator(value)===0 || iterator(value)===undefined){
           falseTimes += 1;
         }
@@ -230,27 +230,25 @@ var _ = { };
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-    //if not every false, then true
-    if(collection.length === 0){
-      return false;
-    }
-    if(arguments.length > 1){
-      var ans = _.every(collection, iterator);
-      if(ans.length === 1){
-        return true;
-      } else {
-        if(ans[1] !== collection.length){
-          return true;
+    var trueTimes = 0;
+    _.each(collection, function(value){
+        if(iterator != null){
+            if(iterator(value)===true || iterator(value)===1){
+                trueTimes += 1;
+                return true;
+            }
         } else {
-          return false;
+            if(value){
+                trueTimes += 1;
+                return true;
+            }
         }
-      }
-    } else {
-      if(_.every(collection)===true){
+    });
+    if(trueTimes>0){
+        console.log(trueTimes);
         return true;
-      } else {
-
-      }
+    } else {
+        return false;
     }
   };
 

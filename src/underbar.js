@@ -1,6 +1,5 @@
-/*jshint eqnull:true, expr:true*/
-
 "use strict";
+/*jshint eqnull:true, expr:true*/
 
 var _ = { };
 
@@ -226,14 +225,6 @@ var _ = { };
     } else {
       return true;
     }
-
-    return _.reduce(collection, function(wasFound, item) {
-      if(wasFound) {
-        return true;
-      }
-      return item === target;
-    }, false);
-
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -344,6 +335,12 @@ var _ = { };
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+
+    var memory;
+    var result;
+
+    result = func.apply(this, arguments);
+
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -353,6 +350,16 @@ var _ = { };
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var args = Array.prototype.slice.call(arguments);
+    args.splice(0,2);
+    setTimeout(function(){
+      if(args != null){
+        console.log(args);
+        func.apply(this, args);
+      } else {
+        func();
+      }
+    }, wait);
   };
 
 

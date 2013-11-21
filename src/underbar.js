@@ -1,5 +1,7 @@
 /*jshint eqnull:true, expr:true*/
 
+"use strict";
+
 var _ = { };
 
 (function() {
@@ -253,7 +255,6 @@ var _ = { };
         }
     });
     if(trueTimes>0){
-        console.log(trueTimes);
         return true;
     } else {
         return false;
@@ -362,6 +363,11 @@ var _ = { };
 
   // Shuffle an array.
   _.shuffle = function(array) {
+    var newArray = [];
+    while(array.length > 0){
+      newArray.push(array.splice(Math.floor(Math.random()*(array.length)), 1)[0]);
+    }
+    return newArray;
   };
 
 

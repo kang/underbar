@@ -203,27 +203,14 @@ var _ = { };
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-    var falseTimes = 0;
-    if(arguments.length === 1){
-      _.reduce(collection, function(total, value){
-        if(value === false || value === null || value === 0 || value === undefined){
-          falseTimes += 1;
-        }
-      });
+    if(arguments.length < 2){
+      return _.reduce(collection, function(wasFound, item){
+        return (wasFound && item) ? true : false;
+      }, true);
     } else {
-      _.reduce(collection, function(total, value){
-        if(iterator(value)===false || iterator(value) === null || iterator(value)===0 || iterator(value)===undefined){
-          falseTimes += 1;
-        }
-      });
-    }
-    if(falseTimes>0){
-      if(arguments.length>1){
-        iterator(false, falseTimes);
-      }
-      return false;
-    } else {
-      return true;
+      return _.reduce(collection, function(wasFound, item){
+        return (wasFound && iterator(item)) ? true : false;
+      }, true);
     }
   };
 
@@ -231,24 +218,14 @@ var _ = { };
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-    var trueTimes = 0;
-    _.each(collection, function(value){
-        if(iterator != null){
-            if(iterator(value)===true || iterator(value)===1){
-                trueTimes += 1;
-                return true;
-            }
-        } else {
-            if(value){
-                trueTimes += 1;
-                return true;
-            }
-        }
-    });
-    if(trueTimes>0){
-        return true;
+    if(arguments.length < 2){
+      return _.reduce(collection, function(wasFound, item){
+        return (wasFound || item) ? true : false;
+      }, false);
     } else {
-        return false;
+      return _.reduce(collection, function(wasFound, item){
+        return (wasFound || iterator(item)) ? true : false;
+      }, false);
     }
   };
 
@@ -335,12 +312,16 @@ var _ = { };
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-
     var memory;
     var result;
-
-    result = func.apply(this, arguments);
-
+    return function(){
+      if(memory != arguments){
+        result = func.apply(this, arguments);
+        memory = arguments;
+      }
+      console.log(result);
+      return result;
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -354,7 +335,6 @@ var _ = { };
     args.splice(0,2);
     setTimeout(function(){
       if(args != null){
-        console.log(args);
         func.apply(this, args);
       } else {
         func();

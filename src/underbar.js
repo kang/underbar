@@ -17,16 +17,11 @@ var _ = { };
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
   _.first = function(array, n) {
-    var listArray = [];
-    if(n>array.length){
-      n = array.length;
-    }
-    if(arguments.length > 1){
-      for(var i =0; i<=n-1; i++){
-        listArray.push(array[i]);
-      }
+    var listArray;
+    if(arguments.length>1){
+      listArray=array.slice(0,n);
     } else {
-      return array[0];
+      listArray=array[0];
     }
     return listArray;
   };
@@ -34,16 +29,14 @@ var _ = { };
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-    var listArray = [];
-    if(n > array.length){
-      return array;
-    }
-    if(arguments.length > 1){
-      for(var i=array.length-n; i<array.length; i++){
-        listArray.push(array[i]);
+    var listArray;
+    if(arguments.length>1){
+      listArray=array.slice(array.length-n, n+1);
+      if(n>array.length){
+        listArray=array;
       }
     } else {
-      return array[array.length-1];
+      listArray=array[array.length-1];
     }
     return listArray;
   };
@@ -159,7 +152,7 @@ var _ = { };
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName, args) {
     return _.map(list, function(value){
-      return typeof(methodName) === 'function' ? methodName.apply(value, args) : value[methodName].apply(value, args);
+      return typeof methodName === 'function' ? methodName.apply(value, args) : value[methodName].apply(value, args);
     });
   };
 
@@ -319,10 +312,11 @@ var _ = { };
         result = func.apply(this, arguments);
         memory = arguments;
       }
-      console.log(result);
       return result;
     }
   };
+  //refactor
+
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
